@@ -1,6 +1,6 @@
 <?php 
 
-require dirname(__FILE__) . '/../includes/main.inc.php';
+require __DIR__ . '/../includes/main.inc.php';
 
 $params = array(
   'dsd' => $date['mday'],
