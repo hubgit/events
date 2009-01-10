@@ -1,12 +1,12 @@
 <?php
 
-require_once __DIR__ . '/includes/main.inc.php';
+require_once dirname(__FILE__) . '/includes/main.inc.php';
 
-chdir(realpath(__DIR__));
+chdir(realpath(dirname(__FILE__)));
   
 $files = scandir('parsers');
 foreach ($files as $file){
-  if (strpos($file, '.') === 0)
+  if (strstr($file, '.'))
     continue;
     
   $base = basename($file);
