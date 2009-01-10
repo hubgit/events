@@ -5,7 +5,7 @@
 // http://www.timeout.com/london/venue/14759/cafe_oto.html
 // http://www.remotegoat.co.uk/venue_view.php?uid=25219
 
-require dirname(__FILE__) . '/../includes/main.inc.php';
+require __DIR__ . '/../includes/main.inc.php';
 
 $xml = url_html_xml('http://www.cafeoto.co.uk/programme.shtm');
 //$xml = url_html_xml('files/test.html');

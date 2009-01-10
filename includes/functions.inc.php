@@ -52,7 +52,7 @@ function ical_start($name){
 }
 
 function ical_event($event){
-  require dirname(__FILE__) . '/event.tpl.php';
+  require __DIR__ . '/event.tpl.php';
 }
 
 function ical_end(){

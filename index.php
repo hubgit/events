@@ -8,7 +8,7 @@
     <?php
     require_once 'includes/main.inc.php';
         
-    $files = scandir(dirname(__FILE__) . '/output');
+    $files = scandir(__DIR__ . '/output');
     foreach ($files as $file):
       if (strpos($file, '.') === 0)
         continue;
