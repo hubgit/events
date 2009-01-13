@@ -1,3 +1,6 @@
 mkdir output
-chown www-data output
+
+install PHP 5.3 for some parsers to work
+
+php update.php
 

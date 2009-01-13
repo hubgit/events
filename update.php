@@ -13,5 +13,7 @@ foreach ($files as $file){
     
   $base = basename($file);
   
+  print "$base\n";
+  
   system(sprintf("'parsers/%s' > 'output/%s.ics'", $file, $base));
 }
