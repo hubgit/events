@@ -40,6 +40,7 @@ foreach ($rows as $row){
     'image' => make_link($thumbnail->img['src']),
     'summary' => (string) $summary,
     'description' => (string) $description,
+    'location' => $calendar_name,
     )); 
 }
 

@@ -10,6 +10,8 @@ if (phpversion() < 5.3) // DateTime::createFromFormat
 
 require dirname(__FILE__) . '/../includes/main.inc.php';
 
+$calendar_name = 'cafe OTO';
+
 $xml = url_html_xml('http://www.cafeoto.co.uk/programme.shtm');
 //$xml = url_html_xml('files/test.html');
 
@@ -17,7 +19,7 @@ $rows = $xml->xpath('//td[@id="maincontent"]/table/tr');
 array_shift($rows); // header
 $events = array();
 
-ical_start('cafe OTO');
+ical_start($calendar_name);
 
 foreach ($rows as $row){  
   $start = fix_oto_date((string) $row->td[1]->p[1]);
@@ -40,6 +42,7 @@ foreach ($rows as $row){
     'image' => make_link($thumbnail->img['src']),
     'summary' => strip_tags($summary),
     'description' => strip_tags($description->asXML()),
+    'location' => $calendar_name,
     );
     
   ical_event($event);

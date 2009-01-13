@@ -7,6 +7,8 @@
 
 require dirname(__FILE__) . '/../includes/main.inc.php';
 
+$calendar_name = 'Southbank Centre';
+
 $xml = url_html_xml('http://www.southbankcentre.co.uk/all-events?action=calendar&calendar_selected=2009-01-13');
 //$xml = url_html_xml('../files/test.html');
 
@@ -14,21 +16,23 @@ $rows = $xml->xpath('//div[@id="col1"]/div[@class="list"]');
 
 $events = array();
 
-ical_start('Southbank Centre');
+ical_start($calendar_name);
 
 foreach ($rows as $row){  
-  $datetime = (string) first($row->xpath('div/p[@class="datetime"]'));
+  $thumbnail = first($row->xpath('a[@class="noA"]')); 
+
+  $info = $row->div[0];
+  
+  $datetime = (string) first($info->xpath('*[@class="datetime"]'));
   list($start, $end) = explode(' - ', $datetime);
-    
-  $thumbnail = first($row->xpath('a[@class="noA"]'));
   
-  $venue = first($row->xpath('*[@class="venue"]'));
-  $price = first($row->xpath('*[@class="price"]'));
+  $summary = (string) $info->h4;
+  $description = (string) first($info->xpath('*[@class="info2"]'));
   
-  $summary = (string) $row->div->h4;
+  $venue = (string) first($info->xpath('*[@class="venue"]'));
+  $price = first($info->xpath('*[@class="price"]'));
+  
   //printf("\n===\n%s\n===\n", $summary);
-  
-  $description = first($row->xpath('div/*[@class="info2"]'));
   
   $event = array(
     'start' => strtotime($start),
@@ -36,7 +40,8 @@ foreach ($rows as $row){
     'uri' => make_link($thumbnail['href']),
     'image' => make_link($thumbnail->img['src']),
     'summary' => strip_tags($summary),
-    'description' => strip_tags($description->asXML()),
+    'description' => strip_tags($description),
+    'location' => $venue ? $venue : $calendar_name,
     );
     
   ical_event($event);
