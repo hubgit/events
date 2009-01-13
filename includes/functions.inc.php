@@ -4,7 +4,12 @@ function url_html_xml($url){
   global $root;
   $root = dirname($url);
   
+  //$html = file_get_contents($url);
+  //$html = str_replace('xmlns="http://www.w3.org/1999/xhtml"', '', $html);
+  //$dom = @DOMDocument::loadHTML($html);
+  
   $dom = @DOMDocument::loadHTMLFile($url);
+  
   //$root = $dom->baseURI; // TODO: check for BASE element in HTML?
   return simplexml_import_dom($dom);
 }
@@ -52,7 +57,7 @@ function ical_start($name){
 }
 
 function ical_event($event){
-  require __DIR__ . '/event.tpl.php';
+  require dirname(__FILE__) . '/event.tpl.php';
 }
 
 function ical_end(){

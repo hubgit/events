@@ -1,10 +1,12 @@
 <?php
-  
-require_once __DIR__ . '/includes/main.inc.php';
 
-chdir(realpath(__DIR__));
+$dir = dirname(__FILE__);
   
-$files = scandir(__DIR__ . '/parsers');
+require_once $dir . '/includes/main.inc.php';
+
+chdir(realpath($dir));
+  
+$files = scandir($dir . '/parsers');
 foreach ($files as $file){
   if (strstr($file, '.'))
     continue;
