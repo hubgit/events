@@ -6,9 +6,9 @@
 
   <ul>
     <?php
-    require_once 'includes/main.inc.php';
+    require_once 'main.inc.php';
         
-    $files = scandir(__DIR__ . '/output');
+    $files = scandir(ROOT . '/output');
     foreach ($files as $file):
       if (strpos($file, '.') === 0)
         continue;

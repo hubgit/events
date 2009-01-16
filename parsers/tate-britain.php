@@ -7,5 +7,5 @@ $gal = 336;
 
 $calendar_name = 'Tate Britain';
 
-require dirname(__FILE__) . '/tate.inc.php';
+require __DIR__ . '/tate.inc.php';
 

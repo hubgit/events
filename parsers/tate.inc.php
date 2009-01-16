@@ -1,6 +1,6 @@
 <?php 
 
-require dirname(__FILE__) . '/../includes/main.inc.php';
+require __DIR_ . '/../main.inc.php';
 
 $params = array(
   'dsd' => $date['mday'],
@@ -18,10 +18,8 @@ $xml = url_html_xml($url);
 //$xml = url_html_xml('files/tate.html');
 
 $rows = $xml->xpath('//div[@id="results"]/div/table/tr[@class="resultrow"]');
+
 $events = array();
-
-ical_start($calendar_name);
-
 foreach ($rows as $row){
   $date_span = $row->td[0]->span[1]->span;
   $start = sscanf((string) $date_span->span[0], '%d.%d');
@@ -33,7 +31,7 @@ foreach ($rows as $row){
   $summary = first($info->xpath('div[@class="resultstitle"]/strong/a/span'));
   $description = first($info->xpath('div[@class="resultsdesc"]/span/span'));
   
-  ical_event(array(
+  $events[] = array(
     'start' => gmmktime($start[0], $start[1], 0, $date['mon'], $date['mday'], $date['year']),
     'end' => gmmktime($end[0], $end[1], 0, $date['mon'], $date['mday'], $date['year']),
     'uri' => make_link($thumbnail['href']),
@@ -41,8 +39,9 @@ foreach ($rows as $row){
     'summary' => (string) $summary,
     'description' => (string) $description,
     'location' => $calendar_name,
-    )); 
+    ); 
 }
 
-ical_end();
+ical($calendar_name, $events);
+
 

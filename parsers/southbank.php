@@ -5,7 +5,7 @@
 // http://www.timeout.com/london/venue/14759/cafe_oto.html
 // http://www.remotegoat.co.uk/venue_view.php?uid=25219
 
-require dirname(__FILE__) . '/../includes/main.inc.php';
+require __DIR_ . '/../main.inc.php';
 
 $calendar_name = 'Southbank Centre';
 
@@ -15,16 +15,13 @@ $xml = url_html_xml('http://www.southbankcentre.co.uk/all-events?action=calendar
 $rows = $xml->xpath('//div[@id="col1"]/div[@class="list"]');
 
 $events = array();
-
-ical_start($calendar_name);
-
 foreach ($rows as $row){  
   $thumbnail = first($row->xpath('a[@class="noA"]')); 
 
   $info = $row->div[0];
   
   $datetime = (string) first($info->xpath('*[@class="datetime"]'));
-  list($start, $end) = explode(' - ', $datetime);
+  list($start, $end) = array_map('strtotime', explode(' - ', $datetime));
   
   $summary = (string) $info->h4;
   $description = (string) first($info->xpath('*[@class="info2"]'));
@@ -34,9 +31,9 @@ foreach ($rows as $row){
   
   //printf("\n===\n%s\n===\n", $summary);
   
-  $event = array(
-    'start' => strtotime($start),
-    'end' => strtotime($end),
+  $events[] = array(
+    'start' => $start,
+    'end' => $end,
     'uri' => make_link($thumbnail['href']),
     'image' => make_link($thumbnail->img['src']),
     'summary' => strip_tags($summary),
@@ -44,9 +41,6 @@ foreach ($rows as $row){
     'location' => $venue ? $venue : $calendar_name,
     );
     
-  ical_event($event);
-  store_event($event);
 }
 
-ical_end();
-
+ical($calendar_name, $events);

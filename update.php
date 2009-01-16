@@ -1,19 +1,19 @@
 <?php
-
-$dir = dirname(__FILE__);
   
-require_once $dir . '/includes/main.inc.php';
+chdir(realpath(__DIR__));
 
-chdir(realpath($dir));
+require 'main.inc.php';
   
-$files = scandir($dir . '/parsers');
+$files = scandir('parsers');
 foreach ($files as $file){
-  if (strstr($file, '.'))
+  $file = 'parsers/' . $file;
+  if (is_dir($file))
+    continue;
+  
+  if (substr(decoct(fileperms($file)), 3) != 755) // executable
     continue;
     
-  $base = basename($file);
+  print "$file\n";
   
-  print "$base\n";
-  
-  system(sprintf("'parsers/%s' > 'output/%s.ics'", $file, $base));
+  system(sprintf("'%s' > 'output/%s.ics'", $file, pathinfo($file, PATHINFO_FILENAME)));
 }

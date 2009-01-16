@@ -1,24 +1,24 @@
 #!/usr/bin/env php
 <?php
 
-require dirname(__FILE__) . '/../includes/main.inc.php';
+require __DIR_ . '/../main.inc.php';
 
 $calendar_name = 'Housmans Bookshop';
 
-$text = file_get_contents(__DIR__ . '/../files/test.html');
+$text = file_get_contents('http://www.housmans.com/events.php');
 preg_match_all('!<(?:strong|span)[^>]*>(\d+)\..+?\((.+?)\).*?<br />\s*(?:</strong>)?(?:</span>)?(.+?)</(?:strong|span)>.*?<(?:em|span)[^>]*>(.+?)</(?:em|span)>.*?(?:<img[^>]+src="(.+?)")?!is', $text, $matches, PREG_SET_ORDER);
   
 //print_r($matches); exit();
-$events = array();
+$items = array();
 foreach ($matches as $item){  
   array_shift($item); 
-  $events[] = array_map('fix_housmans', $item);
+  $items[] = array_map('fix_housmans', $item);
 }
-
-ical_start($calendar_name);
 
 $today = strtotime(date('Y-m-d'));
 $year = date('Y');
+
+$events = array();
 foreach ($events as $item){
    list($number, $type, $summary, $date) = $item;
    $datetime = preg_split('/\s*(\–|\-)\s*/', $date);
@@ -50,7 +50,7 @@ foreach ($events as $item){
    
    $start = $start->getTimestamp();
    
-   $event = array(
+   $events[] = array(
      'start' => $start,
      'end' => $start + 60*60, // 1hr
      'uri' => '',
@@ -59,12 +59,9 @@ foreach ($events as $item){
      'description' => $summary,
      'location' => $calendar_name,
      );
-
-   ical_event($event);
-   store_event($event);
 }
 
-ical_end();
+ical($calendar_name, $events);
 
 function fix_housmans($data){
   $data = html_entity_decode($data);

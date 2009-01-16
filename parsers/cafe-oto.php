@@ -5,10 +5,7 @@
 // http://www.timeout.com/london/venue/14759/cafe_oto.html
 // http://www.remotegoat.co.uk/venue_view.php?uid=25219
 
-if (phpversion() < 5.3) // DateTime::createFromFormat
-  return;
-
-require dirname(__FILE__) . '/../includes/main.inc.php';
+require __DIR_ . '/../main.inc.php';
 
 $calendar_name = 'cafe OTO';
 
@@ -19,10 +16,11 @@ $rows = $xml->xpath('//td[@id="maincontent"]/table/tr');
 array_shift($rows); // header
 $events = array();
 
-ical_start($calendar_name);
-
 foreach ($rows as $row){  
   $start = fix_oto_date((string) $row->td[1]->p[1]);
+  if (!$start)
+    continue;
+    
   $end = $start + 60*60*3; // 3hr
     
   $thumbnail = first($row->xpath('td[@id="progpics"]/a'));
@@ -35,7 +33,7 @@ foreach ($rows as $row){
   unset($description->p[0]);
   unset($description->br);
   
-  $event = array(
+  $events[] = array(
     'start' => $start,
     'end' => $end,
     'uri' => make_link($thumbnail['href']),
@@ -43,13 +41,10 @@ foreach ($rows as $row){
     'summary' => strip_tags($summary),
     'description' => strip_tags($description->asXML()),
     'location' => $calendar_name,
-    );
-    
-  ical_event($event);
-  store_event($event);
+    ); 
 }
 
-ical_end();
+ical($calendar_name, $events);
 
 function fix_oto_date($input){
   $date_string = preg_replace('/•/', '', $input);
@@ -65,6 +60,9 @@ function fix_oto_date($input){
   debug($formatted_date);
   
   $date = DateTime::createFromFormat('j M Y, g:iA', $formatted_date);
+  if (!$date)
+    return FALSE;
+    
   $time = $date->getTimestamp();
   debug(date(DATE_ATOM, $time));
   

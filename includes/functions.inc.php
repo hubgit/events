@@ -14,6 +14,18 @@ function url_html_xml($url){
   return simplexml_import_dom($dom);
 }
 
+function url_html_zend($url){
+  global $root;
+  $root = dirname($url);
+  
+  require_once ROOT . '/libs/Zend/Dom/Query.php';
+ 
+  $html = @DOMDocument::loadHTMLFile($url);
+  $dom = new Zend_Dom_Query($html->saveHTML());
+  
+  return $dom;  
+}
+
 function first($array){
   return current(array_slice($array, 0, 1));
 }
@@ -52,16 +64,8 @@ function make_link($url){
   return $url;
 }
 
-function ical_start($name){
-  print sprintf("BEGIN:VCALENDAR\nVERSION:2.0\nX-WR-TIMEZONE:Europe/London\nX-WR-CALNAME:%s", sanical($name));
-}
-
-function ical_event($event){
-  require dirname(__FILE__) . '/event.tpl.php';
-}
-
-function ical_end(){
-  print "END:VCALENDAR\n";
+function ical($name, $events){
+  require ROOT . '/templates/icalendar.tpl.php';
 }
 
 function debug($t){
