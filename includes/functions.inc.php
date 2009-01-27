@@ -69,7 +69,7 @@ function ical($name, $events){
 }
 
 function debug($t){
-  $debug = 0;
+  $debug = 1w;
   if ($debug){
     print_r($t);
     print "\n";

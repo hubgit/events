@@ -51,6 +51,9 @@ function fix_oto_date($input){
   debug($input);
   
   preg_match('/(\d+)\s+(\w+)\s+\'(\d+)\s+([0-9:]+)([AP]M)/s', $date_string, $matches);
+  if (!$matches)
+    continue;
+  
   array_shift($matches);
   
   if (!strpos(':', $matches[3]))
