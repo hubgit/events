@@ -34,6 +34,7 @@ var listen = {
 
     var params = parseGETParams(listen.data);
     scrayp.defs = JSON.parse(params.defs);
+    dumpr(scrayp.defs);
   
     var url = scrayp.defs.url;
     

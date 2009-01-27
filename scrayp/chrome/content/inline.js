@@ -14,7 +14,7 @@ var scrayp = {
         
         var item = (selector) ? node.querySelector(selector) : node;
         
-        var result;
+        var result = '';
         if (item)
           result = scrayp.format(item, resultType); 
         
